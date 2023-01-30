@@ -1,1 +1,51 @@
+import sklearn
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+print( 'The scikit learn version is {}.'.format(sklearn.__version__))
+from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+from sklearn.linear_model import SGDClassifier
+from sklearn import metrics
 
+
+#Get data
+Trea = pd.read_csv('C:\\Users\\dell\\Desktop\\IE 517\\Treasury Squeeze raw score data.csv')
+x_Trea = Trea.loc[:,['price_crossing','price_distortion']]
+y_Trea = Trea.iloc[:,11]
+
+#Prepare(Split)training and testing data
+x_train, x_test, y_train, y_test = train_test_split(x_Trea, y_Trea,test_size=0.25, random_state=33)
+print( x_train.shape, y_train.shape)
+
+
+#Standardize the data
+scaler = preprocessing.StandardScaler().fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+#Plotting
+colors = ['red', 'blue']
+for i in range(len(colors)):
+    xs = x_train[:, 0][y_train == i]
+    ys = x_train[:, 1][y_train == i]
+    plt.scatter(xs, ys, c=colors[i])
+
+plt.xlabel('Price Crossing')
+plt.ylabel('Price Distortion')
+
+#Classification
+clf = SGDClassifier()
+clf.fit(x_train, y_train)
+
+print( clf.coef_)
+print( clf.intercept_)
+
+
+
+
+    
+    
+print("My name ShunTat Lam")
+print("My NetID is: stlam2")
+print("I hereby certify that I have read the University policy on Academic Integrity and that I am not in violation.")
